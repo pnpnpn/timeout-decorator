@@ -31,4 +31,4 @@ Usage
 
 Acknowledgement
 --------------------
-Derived from http://pyparsing.wikispaces.com/file/view/streetAddressParser.py
+Derived from http://www.saltycrane.com/blog/2010/04/using-python-timeout-decorator-uploading-s3/
