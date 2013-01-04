@@ -15,7 +15,7 @@ CLASSIFIERS=[
     'Operating System :: OS Independent',
     'Programming Language :: Python',
     'Topic :: Software Development :: Libraries :: Python Modules'
-    ],
+    ]
 
 setup( 
         name='timeout-decorator',
@@ -27,7 +27,6 @@ setup(
         url='https://github.com/pnpnpn/timeout-decorator',
         packages=['timeout_decorator'],
         install_requires=[],
-        #test_suite='tests',
         classifiers=CLASSIFIERS)
 
 
