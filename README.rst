@@ -32,3 +32,7 @@ Usage
 Acknowledgement
 --------------------
 Derived from http://www.saltycrane.com/blog/2010/04/using-python-timeout-decorator-uploading-s3/
+
+Contribute
+------------
+I would love for you to fork and send me pull request for this project. Please contribute.
