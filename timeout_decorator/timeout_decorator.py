@@ -18,19 +18,28 @@ import signal
 
 #http://www.saltycrane.com/blog/2010/04/using-python-timeout-decorator-uploading-s3/
 
+
 class TimeoutError(Exception):
-    def __init__(self, value = "Timed Out"):
+    def __init__(self, value="Timed Out"):
         self.value = value
+
     def __str__(self):
         return repr(self.value)
 
-def timeout(seconds_before_timeout):
+
+def timeout(seconds=None):
     def decorate(f):
         def handler(signum, frame):
             raise TimeoutError()
+
         def new_f(*args, **kwargs):
             old = signal.signal(signal.SIGALRM, handler)
-            signal.alarm(seconds_before_timeout)
+
+            new_seconds = kwargs['timeout'] if 'timeout' in kwargs else seconds
+            if new_seconds is None:
+                raise ValueError("You must provide a timeout value")
+
+            signal.alarm(new_seconds)
             try:
                 result = f(*args, **kwargs)
             finally:
