@@ -2,14 +2,38 @@
 # -*- coding: utf-8 -*-
 
 import time
-import timeout_decorator 
 
-@timeout_decorator.timeout(5)
-def mytest():
-    print "Start"
-    for i in range(1,10):
+from nose.tools import raises
+
+from timeout_decorator import timeout, TimeoutError
+
+
+@raises(TimeoutError)
+def test_timeout_decorator_arg():
+    @timeout(1)
+    def f():
+        time.sleep(2)
+    f()
+
+
+@raises(TimeoutError)
+def test_timeout_kwargs():
+    @timeout()
+    def f(timeout):
+        time.sleep(2)
+    f(timeout=1)
+
+
+@raises(ValueError)
+def test_timeout_no_seconds():
+    @timeout()
+    def f(timeout):
+        time.sleep(2)
+    f()
+
+
+def test_timeout_ok():
+    @timeout(seconds=2)
+    def f():
         time.sleep(1)
-        print "%d seconds have passed" % i
-
-if __name__ == '__main__':
-    mytest()
+    f()
