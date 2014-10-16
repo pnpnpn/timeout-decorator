@@ -3,17 +3,17 @@
 
 Installation
 ------------
-From source code: ::
+From source code:
 
     python setup.py install
 
-From pypi: ::
+From pypi:
 
     pip install timeout-decorator
 
 Usage
 -----
-::
+
 
     import time
     import timeout_decorator 
@@ -36,3 +36,7 @@ Derived from http://www.saltycrane.com/blog/2010/04/using-python-timeout-decorat
 Contribute
 ------------
 I would love for you to fork and send me pull request for this project. Please contribute.
+
+License
+---------
+Released under the [MIT License](http://www.opensource.org/licenses/MIT).
