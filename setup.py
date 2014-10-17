@@ -21,7 +21,7 @@ setup(
         name='timeout-decorator',
         version='0.1.0',
         description='Timeout decorator',
-        long_description = open('README.rst').read(),
+        long_description = open('README.md').read(),
         author='PN',
         author_email='pn.appdev@gmail.com',
         url='https://github.com/pnpnpn/timeout-decorator',
