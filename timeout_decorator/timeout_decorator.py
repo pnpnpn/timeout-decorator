@@ -11,6 +11,7 @@ from __future__ import unicode_literals
 from __future__ import division
 
 import signal
+from functools import wraps
 
 ############################################################
 # Timeout
@@ -32,6 +33,7 @@ def timeout(seconds=None):
         def handler(signum, frame):
             raise TimeoutError()
 
+        @wraps(f)
         def new_f(*args, **kwargs):
             old = signal.signal(signal.SIGALRM, handler)
 
@@ -46,6 +48,5 @@ def timeout(seconds=None):
                 signal.signal(signal.SIGALRM, old)
             signal.alarm(0)
             return result
-        new_f.func_name = f.func_name
         return new_f
     return decorate

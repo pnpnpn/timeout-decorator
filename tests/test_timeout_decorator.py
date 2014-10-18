@@ -37,3 +37,11 @@ def test_timeout_ok():
     def f():
         time.sleep(1)
     f()
+
+
+def test_function_name():
+    @timeout(seconds=2)
+    def func_name():
+        pass
+
+    assert func_name.__name__ == 'func_name'
