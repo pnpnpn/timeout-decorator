@@ -1,4 +1,4 @@
-
+[![Build Status](https://travis-ci.org/pnpnpn/timeout-decorator.svg?branch=master)](https://travis-ci.org/pnpnpn/timeout-decorator)
 
 
 Installation
