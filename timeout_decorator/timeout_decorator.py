@@ -20,7 +20,7 @@ from functools import wraps
 #http://www.saltycrane.com/blog/2010/04/using-python-timeout-decorator-uploading-s3/
 
 
-class TimeoutError(Exception):
+class TimeoutError(AssertionError):
     def __init__(self, value="Timed Out"):
         self.value = value
 
