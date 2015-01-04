@@ -10,3 +10,11 @@ install: "pip install -r requirements"
 
 # command to run tests
 script: nosetests
+
+deploy:
+  provider: pypi
+  user: png
+  password:
+    secure: eBbfhZIiQy9bdQM7JbkLHNgZcUQ5wBwgDtQzcmaPOfOH+0RcAvaMzevVmW9l+lYhnO9aqjc5y/23ok11LzqxbQG/qbU5e75GB66zeLOXKk0ftm8kZTIXnjBj/fJeAGLJ78QW3d/27SlC7iAwFNE5dSeRNYb3ZUg/WkfYG1a/sBA=
+  on:
+    python: 3.4
