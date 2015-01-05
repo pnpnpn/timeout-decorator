@@ -19,7 +19,7 @@ CLASSIFIERS=[
 
 setup( 
         name='timeout-decorator',
-        version='0.2.0',
+        version='0.2.1',
         description='Timeout decorator',
         long_description = open('README.md').read(),
         author='PN',
