@@ -45,8 +45,8 @@ def timeout(seconds=None):
             try:
                 result = f(*args, **kwargs)
             finally:
+                signal.alarm(0)
                 signal.signal(signal.SIGALRM, old)
-            signal.alarm(0)
             return result
         return new_f
     return decorate
