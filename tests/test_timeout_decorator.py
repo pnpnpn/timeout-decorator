@@ -1,46 +1,49 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
+"""Timeout decorator tests."""
 import time
 
-from nose.tools import raises
+import pytest
 
 from timeout_decorator import timeout, TimeoutError
 
 
-@raises(TimeoutError)
-def test_timeout_decorator_arg():
-    @timeout(1)
+@pytest.fixture(params=[False, True])
+def use_signals(request):
+    """Use signals for timing out or not."""
+    return request.param
+
+
+def test_timeout_decorator_arg(use_signals):
+    @timeout(1, use_signals=use_signals)
     def f():
         time.sleep(2)
+    with pytest.raises(TimeoutError):
+        f()
+
+
+def test_timeout_kwargs(use_signals):
+    @timeout(3, use_signals=use_signals)
+    def f():
+        time.sleep(2)
+    with pytest.raises(TimeoutError):
+        f(timeout=1)
+
+
+def test_timeout_no_seconds(use_signals):
+    @timeout(use_signals=use_signals)
+    def f():
+        time.sleep(0.1)
     f()
 
 
-@raises(TimeoutError)
-def test_timeout_kwargs():
-    @timeout()
-    def f(timeout):
-        time.sleep(2)
-    f(timeout=1)
-
-
-@raises(ValueError)
-def test_timeout_no_seconds():
-    @timeout()
-    def f(timeout):
-        time.sleep(2)
-    f()
-
-
-def test_timeout_ok():
-    @timeout(seconds=2)
+def test_timeout_ok(use_signals):
+    @timeout(seconds=2, use_signals=use_signals)
     def f():
         time.sleep(1)
     f()
 
 
-def test_function_name():
-    @timeout(seconds=2)
+def test_function_name(use_signals):
+    @timeout(seconds=2, use_signals=use_signals)
     def func_name():
         pass
 
