@@ -1,1 +1,1 @@
-include README.md LICENSE tests/*.py
+include *.rst
