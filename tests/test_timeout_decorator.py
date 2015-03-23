@@ -55,6 +55,7 @@ def test_timeout_pickle_error():
     @timeout(seconds=1, use_signals=False)
     def f():
         time.sleep(0.1)
+
         class Test(object):
             pass
         return Test()
