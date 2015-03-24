@@ -141,10 +141,7 @@ class _Timeout:
         """Read-only property indicating status of "value" property."""
         if self.__timeout < time.time():
             self.cancel()
-        if self.__queue.full() and not self.__queue.empty():
-            return True
-        else:
-            return False
+        return self.__queue.full() and not self.__queue.empty()
 
     @property
     def value(self):
