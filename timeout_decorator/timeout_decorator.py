@@ -118,7 +118,6 @@ class _Timeout:
         True, the "value" property may then be checked for returned data.
         """
         self.__limit = kwargs.pop('timeout', self.__limit)
-        self.cancel()
         self.__queue = multiprocessing.Queue(1)
         args = (self.__queue, self.__function) + args
         self.__process = multiprocessing.Process(target=_target,
@@ -135,19 +134,14 @@ class _Timeout:
         """Terminate any possible execution of the embedded function."""
         if self.__process.is_alive():
             self.__process.terminate()
-            raise TimeoutError()
+        raise TimeoutError()
 
     @property
     def ready(self):
         """Read-only property indicating status of "value" property."""
-        if self.__queue.full():
-            return True
-        elif not self.__queue.empty():
-            return True
-        elif self.__timeout < time.time():
+        if self.__timeout < time.time():
             self.cancel()
-        else:
-            return False
+        return self.__queue.full() and not self.__queue.empty()
 
     @property
     def value(self):

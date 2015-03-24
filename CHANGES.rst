@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.3.1
+-----
+- Fixed issue with PicklingError causes the timeout to never be reached.
+
 0.3.0
 -----
 

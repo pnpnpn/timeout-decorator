@@ -48,3 +48,16 @@ def test_function_name(use_signals):
         pass
 
     assert func_name.__name__ == 'func_name'
+
+
+def test_timeout_pickle_error():
+    """Test that when a pickle error occurs a timeout error is raised."""
+    @timeout(seconds=1, use_signals=False)
+    def f():
+        time.sleep(0.1)
+
+        class Test(object):
+            pass
+        return Test()
+    with pytest.raises(TimeoutError):
+        f()
