@@ -35,6 +35,14 @@ def test_timeout_no_seconds(use_signals):
     f()
 
 
+def test_timeout_partial_seconds(use_signals):
+    @timeout(0.2, use_signals=use_signals)
+    def f():
+        time.sleep(0.5)
+    with pytest.raises(TimeoutError):
+        f()
+
+
 def test_timeout_ok(use_signals):
     @timeout(seconds=2, use_signals=use_signals)
     def f():
