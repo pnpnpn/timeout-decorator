@@ -40,7 +40,7 @@ def timeout(seconds=None, use_signals=True):
 
     :param seconds: optional time limit in seconds. If None is passed, no timeout is applied.
         This adds some flexibility to the usage: you can disable timing out depending on the settings.
-    :type seconds: int
+    :type seconds: float
     :param use_signals: flag indicating whether signals should be used for timing function out or the multiprocessing
     :type use_signals: bool
 
@@ -63,12 +63,12 @@ def timeout(seconds=None, use_signals=True):
                 new_seconds = kwargs.pop('timeout', seconds)
                 if new_seconds:
                     old = signal.signal(signal.SIGALRM, handler)
-                    signal.alarm(new_seconds)
+                    signal.setitimer(signal.ITIMER_REAL, new_seconds)
                 try:
                     return function(*args, **kwargs)
                 finally:
                     if new_seconds:
-                        signal.alarm(0)
+                        signal.setitimer(signal.ITIMER_REAL, 0)
                         signal.signal(signal.SIGALRM, old)
             return new_function
         else:
