@@ -92,7 +92,7 @@ def _target(queue, function, *args, **kwargs):
         queue.put((False, sys.exc_info()[1]))
 
 
-class _Timeout:
+class _Timeout(object):
 
     """Wrap a function and add a timeout (limit) attribute to it.
 
