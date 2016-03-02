@@ -11,6 +11,7 @@ from __future__ import division
 
 import sys
 import time
+import queue
 import multiprocessing
 import signal
 from functools import wraps
@@ -92,7 +93,7 @@ def _target(queue, function, *args, **kwargs):
         queue.put((False, sys.exc_info()[1]))
 
 
-class _Timeout(object):
+class _Timeout:
 
     """Wrap a function and add a timeout (limit) attribute to it.
 
@@ -126,10 +127,13 @@ class _Timeout(object):
                                                  kwargs=kwargs)
         self.__process.daemon = True
         self.__process.start()
-        self.__timeout = self.__limit + time.time()
-        while not self.ready:
-            time.sleep(0.01)
-        return self.value
+        try:
+            flag, load = self.__queue.get(timeout=self.__limit)
+            if flag:
+                return load
+        except queue.Empty:
+            self.cancel()
+            raise TimeoutError()
 
     def cancel(self):
         """Terminate any possible execution of the embedded function."""
@@ -137,18 +141,3 @@ class _Timeout(object):
             self.__process.terminate()
         raise TimeoutError()
 
-    @property
-    def ready(self):
-        """Read-only property indicating status of "value" property."""
-        if self.__timeout < time.time():
-            self.cancel()
-        return self.__queue.full() and not self.__queue.empty()
-
-    @property
-    def value(self):
-        """Read-only property containing data returned from function."""
-        if self.ready is True:
-            flag, load = self.__queue.get()
-            if flag:
-                return load
-            raise load
