@@ -11,7 +11,7 @@ from __future__ import division
 
 import sys
 import time
-import queue
+import Queue
 import multiprocessing
 import signal
 from functools import wraps
@@ -131,7 +131,7 @@ class _Timeout:
             flag, load = self.__queue.get(timeout=self.__limit)
             if flag:
                 return load
-        except queue.Empty:
+        except Queue.Empty:
             self.cancel()
             raise TimeoutError()
 
