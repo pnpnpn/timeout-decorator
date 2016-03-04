@@ -11,10 +11,14 @@ from __future__ import division
 
 import sys
 import time
-import Queue
 import multiprocessing
 import signal
 from functools import wraps
+
+try:
+    import Queue
+except ImportError:
+    import queue as Queue
 
 ############################################################
 # Timeout
