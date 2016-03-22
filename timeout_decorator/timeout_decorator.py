@@ -144,4 +144,3 @@ class _Timeout:
         if self.__process.is_alive():
             self.__process.terminate()
         raise TimeoutError()
-
