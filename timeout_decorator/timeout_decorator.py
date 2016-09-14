@@ -52,9 +52,6 @@ def timeout(seconds=None, use_signals=True):
     """
     def decorate(function):
 
-        if not seconds:
-            return function
-
         if use_signals:
             def handler(signum, frame):
                 raise TimeoutError()
@@ -65,6 +62,10 @@ def timeout(seconds=None, use_signals=True):
                 if new_seconds:
                     old = signal.signal(signal.SIGALRM, handler)
                     signal.setitimer(signal.ITIMER_REAL, new_seconds)
+
+                if not seconds:
+                    return function(*args, **kwargs)
+
                 try:
                     return function(*args, **kwargs)
                 finally:
@@ -126,7 +127,8 @@ class _Timeout(object):
                                                  kwargs=kwargs)
         self.__process.daemon = True
         self.__process.start()
-        self.__timeout = self.__limit + time.time()
+        if self.__limit is not None:
+            self.__timeout = self.__limit + time.time()
         while not self.ready:
             time.sleep(0.01)
         return self.value
@@ -140,7 +142,7 @@ class _Timeout(object):
     @property
     def ready(self):
         """Read-only property indicating status of "value" property."""
-        if self.__timeout < time.time():
+        if self.__limit and self.__timeout < time.time():
             self.cancel()
         return self.__queue.full() and not self.__queue.empty()
 
