@@ -36,6 +36,23 @@ Usage
     if __name__ == '__main__':
         mytest()
 
+Specify an alternate exception to raise on timeout:
+
+::
+
+    import time
+    import timeout_decorator
+
+    @timeout_decorator.timeout(5, timeout_exception=StopIteration)
+    def mytest():
+        print "Start"
+        for i in range(1,10):
+            time.sleep(1)
+            print "%d seconds have passed" % i
+
+    if __name__ == '__main__':
+        mytest()
+
 Multithreading
 --------------
 

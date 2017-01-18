@@ -28,6 +28,14 @@ def test_timeout_kwargs(use_signals):
         f(timeout=1)
 
 
+def test_timeout_alternate_exception(use_signals):
+    @timeout(3, use_signals=use_signals, timeout_exception=StopIteration)
+    def f():
+        time.sleep(2)
+    with pytest.raises(StopIteration):
+        f(timeout=1)
+
+
 def test_timeout_no_seconds(use_signals):
     @timeout(use_signals=use_signals)
     def f():
