@@ -4,4 +4,4 @@ from .timeout_decorator import timeout
 from .timeout_decorator import TimeoutError
 
 __title__ = 'timeout_decorator'
-__version__ = '0.1.0'
+__version__ = '0.3.3'

@@ -27,7 +27,7 @@ long_description = (
 
 setup(
     name='timeout-decorator',
-    version='0.3.2',
+    version='0.3.3',
     description='Timeout decorator',
     long_description=long_description,
     author='Patrick Ng',

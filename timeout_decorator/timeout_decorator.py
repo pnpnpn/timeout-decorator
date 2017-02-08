@@ -35,7 +35,7 @@ class TimeoutError(AssertionError):
         return repr(self.value)
 
 
-def timeout(seconds=None, use_signals=True):
+def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError):
     """Add a timeout parameter to a function and return it.
 
     :param seconds: optional time limit in seconds or fractions of a second. If None is passed, no timeout is applied.
@@ -57,7 +57,7 @@ def timeout(seconds=None, use_signals=True):
 
         if use_signals:
             def handler(signum, frame):
-                raise TimeoutError()
+                raise timeout_exception()
 
             @wraps(function)
             def new_function(*args, **kwargs):
@@ -73,7 +73,7 @@ def timeout(seconds=None, use_signals=True):
                         signal.signal(signal.SIGALRM, old)
             return new_function
         else:
-            return _Timeout(function, seconds)
+            return _Timeout(function, timeout_exception, seconds)
 
     return decorate
 
@@ -101,10 +101,11 @@ class _Timeout(object):
     to be made and termination of execution after a timeout has passed.
     """
 
-    def __init__(self, function, limit):
+    def __init__(self, function, timeout_exception, limit):
         """Initialize instance in preparation for being called."""
         self.__limit = limit
         self.__function = function
+        self.__timeout_exception = timeout_exception
         self.__name__ = function.__name__
         self.__doc__ = function.__doc__
         self.__timeout = time.time()
@@ -135,7 +136,7 @@ class _Timeout(object):
         """Terminate any possible execution of the embedded function."""
         if self.__process.is_alive():
             self.__process.terminate()
-        raise TimeoutError()
+        raise self.__timeout_exception()
 
     @property
     def ready(self):
