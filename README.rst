@@ -105,7 +105,7 @@ See `License file <https://github.com/pnpnpn/timeout-decorator/blob/master/LICEN
 
 .. |Build Status| image:: https://travis-ci.org/pnpnpn/timeout-decorator.svg?branch=master
    :target: https://travis-ci.org/pnpnpn/timeout-decorator
-.. |Pypi Status| image:: https://pypip.in/v/timeout-decorator/badge.png
-    :target: https://crate.io/packages/timeout-decorator/
+.. |Pypi Status| image:: https://badge.fury.io/py/timeout-decorator.svg
+    :target: https://badge.fury.io/py/timeout-decorator
 .. |Coveralls Status| image:: https://coveralls.io/repos/pnpnpn/timeout-decorator/badge.png?branch=master
     :target: https://coveralls.io/r/pnpnpn/timeout-decorator
