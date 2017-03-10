@@ -12,6 +12,7 @@ from __future__ import division
 import sys
 import time
 import multiprocessing
+import inspect
 import signal
 from functools import wraps
 
@@ -111,6 +112,8 @@ class _Timeout(object):
         self.__timeout = time.time()
         self.__process = multiprocessing.Process()
         self.__queue = multiprocessing.Queue()
+        self.__function_self = (function.im_self) \
+            if inspect.ismethod(function) else ()
 
     def __call__(self, *args, **kwargs):
         """Execute the embedded function object asynchronously.
@@ -121,7 +124,7 @@ class _Timeout(object):
         """
         self.__limit = kwargs.pop('timeout', self.__limit)
         self.__queue = multiprocessing.Queue(1)
-        args = (self.__queue, self.__function) + args
+        args = (self.__queue, self.__function) + self.__function_self + args
         self.__process = multiprocessing.Process(target=_target,
                                                  args=args,
                                                  kwargs=kwargs)
