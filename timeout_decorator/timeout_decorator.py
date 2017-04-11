@@ -75,7 +75,8 @@ def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError):
         else:
             @wraps(function)
             def new_function(*args, **kwargs):
-                return _Timeout(function, timeout_exception, seconds)
+                timeout_wrapper = _Timeout(function, timeout_exception, seconds)
+                return timeout_wrapper(*args, **kwargs)
             return new_function
 
     return decorate
