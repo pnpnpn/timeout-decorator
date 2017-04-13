@@ -73,7 +73,11 @@ def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError):
                         signal.signal(signal.SIGALRM, old)
             return new_function
         else:
-            return _Timeout(function, timeout_exception, seconds)
+            @wraps(function)
+            def new_function(*args, **kwargs):
+                timeout_wrapper = _Timeout(function, timeout_exception, seconds)
+                return timeout_wrapper(*args, **kwargs)
+            return new_function
 
     return decorate
 

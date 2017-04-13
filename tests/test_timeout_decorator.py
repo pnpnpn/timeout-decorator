@@ -20,6 +20,15 @@ def test_timeout_decorator_arg(use_signals):
         f()
 
 
+def test_timeout_class_method(use_signals):
+    class c():
+        @timeout(1, use_signals=use_signals)
+        def f(self):
+            time.sleep(2)
+    with pytest.raises(TimeoutError):
+        c().f()
+
+
 def test_timeout_kwargs(use_signals):
     @timeout(3, use_signals=use_signals)
     def f():
