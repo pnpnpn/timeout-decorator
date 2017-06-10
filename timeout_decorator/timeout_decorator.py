@@ -41,7 +41,7 @@ def _raise_exception(exception, exception_message):
     If there is no exception message, the default behaviour is maintained.
     If there is an exception message, the message is passed to the exception with the 'value' keyword.
     """
-    if exception_message == None:
+    if exception_message is None:
         raise exception()
     else:
         raise exception(value=exception_message)
