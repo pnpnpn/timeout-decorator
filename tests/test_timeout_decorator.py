@@ -90,6 +90,7 @@ def test_timeout_pickle_error():
 
 def test_timeout_custom_exception_message():
     message = "Custom fail message"
+    
     @timeout(seconds=1, exception_message=message)
     def f():
         time.sleep(2)
