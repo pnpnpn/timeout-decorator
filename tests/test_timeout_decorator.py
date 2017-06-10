@@ -89,12 +89,10 @@ def test_timeout_pickle_error():
 
 
 def test_timeout_custom_exception_message():
-    message = "Custom fail message"
-    
-    @timeout(seconds=1, exception_message=message)
+    @timeout(seconds=1, exception_message="Custom fail message")
     def f():
         time.sleep(2)
-    with pytest.raises(TimeoutError, match=message):
+    with pytest.raises(TimeoutError, match="Custom fail message"):
         f()
 
 
