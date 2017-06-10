@@ -94,7 +94,7 @@ def test_timeout_custom_exception_message():
     def f():
         time.sleep(2)
     with pytest.raises(TimeoutError, match=message):
-	    f()
+        f()
 
 
 def test_timeout_default_exception_message():
