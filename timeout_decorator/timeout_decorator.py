@@ -33,6 +33,9 @@ class TimeoutError(AssertionError):
 
     def __str__(self):
         return repr(self.value)
+    
+    def __call__(self):
+        return self
 
 
 def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError):
