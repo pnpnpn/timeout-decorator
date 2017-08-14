@@ -35,7 +35,19 @@ class TimeoutError(AssertionError):
         return repr(self.value)
 
 
-def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError):
+def _raise_exception(exception, exception_message):
+    """ This function checks if a exception message is given.
+
+    If there is no exception message, the default behaviour is maintained.
+    If there is an exception message, the message is passed to the exception with the 'value' keyword.
+    """
+    if exception_message is None:
+        raise exception()
+    else:
+        raise exception(value=exception_message)
+
+
+def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError, exception_message=None):
     """Add a timeout parameter to a function and return it.
 
     :param seconds: optional time limit in seconds or fractions of a second. If None is passed, no timeout is applied.
@@ -57,7 +69,7 @@ def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError):
 
         if use_signals:
             def handler(signum, frame):
-                raise timeout_exception()
+                _raise_exception(timeout_exception, exception_message)
 
             @wraps(function)
             def new_function(*args, **kwargs):
@@ -75,7 +87,7 @@ def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError):
         else:
             @wraps(function)
             def new_function(*args, **kwargs):
-                timeout_wrapper = _Timeout(function, timeout_exception, seconds)
+                timeout_wrapper = _Timeout(function, timeout_exception, exception_message, seconds)
                 return timeout_wrapper(*args, **kwargs)
             return new_function
 
@@ -105,11 +117,12 @@ class _Timeout(object):
     to be made and termination of execution after a timeout has passed.
     """
 
-    def __init__(self, function, timeout_exception, limit):
+    def __init__(self, function, timeout_exception, exception_message, limit):
         """Initialize instance in preparation for being called."""
         self.__limit = limit
         self.__function = function
         self.__timeout_exception = timeout_exception
+        self.__exception_message = exception_message
         self.__name__ = function.__name__
         self.__doc__ = function.__doc__
         self.__timeout = time.time()
@@ -140,7 +153,8 @@ class _Timeout(object):
         """Terminate any possible execution of the embedded function."""
         if self.__process.is_alive():
             self.__process.terminate()
-        raise self.__timeout_exception()
+
+        _raise_exception(self.__timeout_exception, self.__exception_message)
 
     @property
     def ready(self):

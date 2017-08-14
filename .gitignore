@@ -40,3 +40,4 @@ nosetests.xml
 .pydevproject
 
 .ropeproject/
+.vscode/
