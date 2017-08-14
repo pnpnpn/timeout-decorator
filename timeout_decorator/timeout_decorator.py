@@ -33,7 +33,7 @@ class TimeoutError(AssertionError):
 
     def __str__(self):
         return repr(self.value)
-    
+
     def __call__(self):
         return self
 
