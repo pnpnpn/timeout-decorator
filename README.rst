@@ -28,28 +28,36 @@ Usage
 
     @timeout_decorator.timeout(5)
     def mytest():
-        print "Start"
+        print 'Start'
         for i in range(1,10):
             time.sleep(1)
-            print "%d seconds have passed" % i
+            print '%d seconds have passed' % i
 
     if __name__ == '__main__':
         mytest()
 
-Specify an alternate exception to raise on timeout:
+To specify an alternate exception to raise on timeout, first define an exception with a constructor keyword parameter 'value':
+
+::
+    class StopIteration(AssertionError):
+        def __init__(self, value='Stopped iteration becaue of timeout'):
+            self.value = value
+            
+        def __str__(self):
+            return repr(self.value)
+
+Use this exception with the 'timeout_exception' keyword parameter and specify an optional value for the exception's 'value' parameter with the 'timeout' method parameter 'exception_message'. Because decorators are a compile-time code transformation, it is not possible to include runtime values in the exception message.  
 
 ::
 
     import time
     import timeout_decorator
 
-    @timeout_decorator.timeout(5, timeout_exception=StopIteration)
+    @timeout_decorator.timeout(5, timeout_exception=StopIteration, 
+                                  exception_message='Iteration timed out after 5 seconds')
     def mytest():
-        print "Start"
-        for i in range(1,10):
-            time.sleep(1)
-            print "%d seconds have passed" % i
-
+        time.sleep(6)
+        
     if __name__ == '__main__':
         mytest()
 
