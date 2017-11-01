@@ -28,10 +28,10 @@ Usage
 
     @timeout_decorator.timeout(5)
     def mytest():
-        print "Start"
+        print("Start")
         for i in range(1,10):
             time.sleep(1)
-            print "%d seconds have passed" % i
+            print("{} seconds have passed".format(i))
 
     if __name__ == '__main__':
         mytest()
@@ -45,10 +45,10 @@ Specify an alternate exception to raise on timeout:
 
     @timeout_decorator.timeout(5, timeout_exception=StopIteration)
     def mytest():
-        print "Start"
+        print("Start")
         for i in range(1,10):
             time.sleep(1)
-            print "%d seconds have passed" % i
+            print("{} seconds have passed".format(i))
 
     if __name__ == '__main__':
         mytest()
@@ -73,7 +73,7 @@ case - by using multiprocessing. To use it, just pass
         print "Start"
         for i in range(1,10):
             time.sleep(1)
-            print "%d seconds have passed" % i
+            print("{} seconds have passed".format(i))
 
     if __name__ == '__main__':
         mytest()
