@@ -13,7 +13,7 @@ import platform
 import signal
 import sys
 import time
-import wrapt                    # https://wrapt.readthedocs.io/en/latest/decorators.html
+import wrapt
 
 ############################################################
 # Timeout
