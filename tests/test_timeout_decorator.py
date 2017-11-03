@@ -34,6 +34,7 @@ def test_timeout_kwargs(use_signals):
     with pytest.raises(TimeoutError):
         f(dec_timeout=1)
 
+
 def test_timeout_alternate_exception(use_signals):
     @timeout(1, use_signals=use_signals, timeout_exception=StopIteration)
     def f():
@@ -68,7 +69,6 @@ def test_function_name(use_signals):
     @timeout(seconds=2, use_signals=use_signals)
     def func_name():
         pass
-
     assert func_name.__name__ == 'func_name'
 
 
