@@ -25,6 +25,9 @@ import wrapt
 # in https://code.google.com/p/verse-quiz/source/browse/trunk/timeout.py
 
 
+if sys.version_info <= (3,2):
+    TimeoutError = AssertionError
+
 def _raise_exception(exception, exception_message):
     """ This function checks if a exception message is given.
     If there is no exception message, the default behaviour is maintained.
