@@ -11,6 +11,7 @@ python:
 install:
 - if [[ $TRAVIS_PYTHON_VERSION == 3.2 ]]; then pip install -U "virtualenv<14.0.0"; fi
 - pip install python-coveralls tox tox-travis
+- pip install wrapt
 script: tox --recreate
 after_success:
 - pip install -e .
