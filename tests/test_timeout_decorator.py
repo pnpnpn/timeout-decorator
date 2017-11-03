@@ -1,6 +1,5 @@
 """Timeout decorator tests."""
 import time
-import wrapt
 import pytest
 
 from decorators_new import timeout
