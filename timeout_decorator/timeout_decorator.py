@@ -81,9 +81,9 @@ def timeout(seconds=None, use_signals=True, timeout_exception=None, exception_me
 
     if not timeout_exception:
         if sys.version_info < (3, 3):
-            timeout_exception=AssertionError        # there is no TimeoutError below Python 3.3
+            timeout_exception = AssertionError        # there is no TimeoutError below Python 3.3
         else:
-            timeout_exception=TimeoutError
+            timeout_exception = TimeoutError
 
     global exc_msg
     exc_msg = exception_message
