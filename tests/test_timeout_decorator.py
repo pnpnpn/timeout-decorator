@@ -4,6 +4,10 @@ import pytest
 from timeout_decorator import timeout
 
 
+if sys.version_info <= (3, 2):
+    TimeoutError = AssertionError
+
+
 @pytest.fixture(params=[False, True])
 def use_signals(request):
     """Use signals for timing out or not."""
