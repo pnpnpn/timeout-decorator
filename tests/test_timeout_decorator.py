@@ -1,7 +1,7 @@
 """Timeout decorator tests."""
 import time
 import pytest
-from timeout_decorator timeout
+from timeout_decorator import timeout
 
 
 @pytest.fixture(params=[False, True])
