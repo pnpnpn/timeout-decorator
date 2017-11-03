@@ -48,11 +48,15 @@ def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError, exce
     It is illegal to pass anything other than a function as the first
     parameter. The function is wrapped and returned to the caller.
     """
+
+
+
+
     @wrapt.decorator
     def wrapper_signals(wrapped, instance, args, kwargs):
         global exc_msg
         if not exc_msg:
-            exc_msg = '{f} timed out after {s} seconds'.format(f=wrapped.__name__, s=seconds)
+            exc_msg = 'Function {f} Timed out after {s} seconds'.format(f=wrapped.__name__,s=seconds)
         if not seconds:
             return wrapped(*args, **kwargs)
         else:
@@ -70,15 +74,16 @@ def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError, exce
     def wrapper_no_signals(wrapped, instance, args, kwargs):
         global exc_msg
         if not exc_msg:
-            exc_msg = '{f} timed out after {s} seconds'.format(f=wrapped.__name__,s=seconds)
+            exc_msg = 'Function {f} Timed out after {s} seconds'.format(f=wrapped.__name__,s=seconds)
         if not seconds:
             return wrapped(*args, **kwargs)
         else:
             timeout_wrapper = _Timeout(wrapped, timeout_exception, exc_msg, seconds)
             return timeout_wrapper(*args, **kwargs)
 
+    global exc_msg
     exc_msg=exception_message
-    if use_signals and not platform.system().lower().startswith('win') :    # never use signals with windows - it wont work anyway
+    if use_signals and not platform.system().lower().startswith('win') : # never use signals with windows - it wont work anyway
         return wrapper_signals
     else:
         return wrapper_no_signals
