@@ -1,4 +1,3 @@
-
 """
 Timeout decorator.
     :copyright: (c) 2012-2013 by PN.
@@ -55,15 +54,16 @@ def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError, exce
     @wrapt.decorator
     def wrapper_signals(wrapped, instance, args, kwargs):
         global exc_msg
+        new_seconds = kwargs.pop('dec_timeout', seconds)
         if not exc_msg:
-            exc_msg = 'Function {f} Timed out after {s} seconds'.format(f=wrapped.__name__,s=seconds)
-        if not seconds:
+            exc_msg = 'Function {f} Timed out after {s} seconds'.format(f=wrapped.__name__,s=new_seconds)
+        if not new_seconds:
             return wrapped(*args, **kwargs)
         else:
             def handler(signum, frame):
                 _raise_exception(timeout_exception, exc_msg)
             old = signal.signal(signal.SIGALRM, handler)
-            signal.setitimer(signal.ITIMER_REAL, seconds)
+            signal.setitimer(signal.ITIMER_REAL, new_seconds)
             try:
                 return wrapped(*args, **kwargs)
             finally:
@@ -73,12 +73,13 @@ def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError, exce
     @wrapt.decorator
     def wrapper_no_signals(wrapped, instance, args, kwargs):
         global exc_msg
+        new_seconds = kwargs.pop('dec_timeout', seconds)
         if not exc_msg:
-            exc_msg = 'Function {f} Timed out after {s} seconds'.format(f=wrapped.__name__,s=seconds)
-        if not seconds:
+            exc_msg = 'Function {f} Timed out after {s} seconds'.format(f=wrapped.__name__,s=new_seconds)
+        if not new_seconds:
             return wrapped(*args, **kwargs)
         else:
-            timeout_wrapper = _Timeout(wrapped, timeout_exception, exc_msg, seconds)
+            timeout_wrapper = _Timeout(wrapped, timeout_exception, exc_msg, new_seconds)
             return timeout_wrapper(*args, **kwargs)
 
     global exc_msg
@@ -131,9 +132,7 @@ class _Timeout(object):
         self.__limit = kwargs.pop('timeout', self.__limit)
         self.__queue = multiprocessing.Queue(1)
         args = (self.__queue, self.__function) + args
-        self.__process = multiprocessing.Process(target=_target,
-                                                 args=args,
-                                                 kwargs=kwargs)
+        self.__process = multiprocessing.Process(target=_target, args=args, kwargs=kwargs)
         self.__process.daemon = True
         self.__process.start()
         self.__timeout = self.__limit + time.time()
