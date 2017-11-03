@@ -50,7 +50,7 @@ def timeout(seconds=None, use_signals=True, timeout_exception=None, exception_me
     """
     @wrapt.decorator
     def wrapper_signals(wrapped, instance, args, kwargs):
-        global exc_msg
+        exc_msg = exception_message
         new_seconds = kwargs.pop('dec_timeout', seconds)
         if not exc_msg:
             exc_msg = 'Function {f} Timed out after {s} seconds'.format(f=wrapped.__name__, s=new_seconds)
@@ -69,7 +69,7 @@ def timeout(seconds=None, use_signals=True, timeout_exception=None, exception_me
 
     @wrapt.decorator
     def wrapper_no_signals(wrapped, instance, args, kwargs):
-        global exc_msg
+        exc_msg = exception_message
         new_seconds = kwargs.pop('dec_timeout', seconds)
         if not exc_msg:
             exc_msg = 'Function {f} Timed out after {s} seconds'.format(f=wrapped.__name__, s=new_seconds)
@@ -85,8 +85,6 @@ def timeout(seconds=None, use_signals=True, timeout_exception=None, exception_me
         else:
             timeout_exception = TimeoutError
 
-    global exc_msg
-    exc_msg = exception_message
     # never use signals with windows - it wont work anyway
     if use_signals and not platform.system().lower().startswith('win'):
         return wrapper_signals
