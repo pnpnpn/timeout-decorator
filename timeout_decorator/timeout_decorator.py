@@ -1,19 +1,22 @@
+#! /opt/python3/bin/python3
+# -*- coding: utf-8 -*-
+
 """
 Timeout decorator.
-
     :copyright: (c) 2012-2013 by PN.
     :license: MIT, see LICENSE for more details.
+    Rotek modified version using wrapt
+
 """
 
-from __future__ import print_function
-from __future__ import unicode_literals
-from __future__ import division
 
+import multiprocessing
+import multiprocessing.pool
+import platform
+import signal
 import sys
 import time
-import multiprocessing
-import signal
-from functools import wraps
+import wrapt                    # https://wrapt.readthedocs.io/en/latest/decorators.html
 
 ############################################################
 # Timeout
@@ -24,79 +27,64 @@ from functools import wraps
 # in https://code.google.com/p/verse-quiz/source/browse/trunk/timeout.py
 
 
-class TimeoutError(AssertionError):
-
-    """Thrown when a timeout occurs in the `timeout` context manager."""
-
-    def __init__(self, value="Timed Out"):
-        self.value = value
-
-    def __str__(self):
-        return repr(self.value)
-
-
 def _raise_exception(exception, exception_message):
     """ This function checks if a exception message is given.
-
     If there is no exception message, the default behaviour is maintained.
-    If there is an exception message, the message is passed to the exception with the 'value' keyword.
+    If there is an exception message, the message is passed to the exception.
     """
     if exception_message is None:
         raise exception()
     else:
-        raise exception(value=exception_message)
+        raise exception(exception_message)
 
 
 def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError, exception_message=None):
     """Add a timeout parameter to a function and return it.
-
     :param seconds: optional time limit in seconds or fractions of a second. If None is passed, no timeout is applied.
         This adds some flexibility to the usage: you can disable timing out depending on the settings.
     :type seconds: float
     :param use_signals: flag indicating whether signals should be used for timing function out or the multiprocessing
         When using multiprocessing, timeout granularity is limited to 10ths of a second.
     :type use_signals: bool
-
     :raises: TimeoutError if time limit is reached
-
     It is illegal to pass anything other than a function as the first
     parameter. The function is wrapped and returned to the caller.
     """
-    def decorate(function):
-
+    @wrapt.decorator
+    def wrapper_signals(wrapped, instance, args, kwargs):
+        global exc_msg
+        if not exc_msg:
+            exc_msg = '{f} timed out after {s} seconds'.format(f=wrapped.__name__,s=seconds)
         if not seconds:
-            return function
-
-        if use_signals:
-            def handler(signum, frame):
-                _raise_exception(timeout_exception, exception_message)
-
-            @wraps(function)
-            def new_function(*args, **kwargs):
-                new_seconds = kwargs.pop('timeout', seconds)
-                if new_seconds:
-                    old = signal.signal(signal.SIGALRM, handler)
-                    signal.setitimer(signal.ITIMER_REAL, new_seconds)
-                try:
-                    return function(*args, **kwargs)
-                finally:
-                    if new_seconds:
-                        signal.setitimer(signal.ITIMER_REAL, 0)
-                        signal.signal(signal.SIGALRM, old)
-            return new_function
+            return wrapped(*args, **kwargs)
         else:
-            @wraps(function)
-            def new_function(*args, **kwargs):
-                timeout_wrapper = _Timeout(function, timeout_exception, exception_message, seconds)
-                return timeout_wrapper(*args, **kwargs)
-            return new_function
+            def handler(signum, frame):
+                _raise_exception(timeout_exception, exc_msg)
+            old = signal.signal(signal.SIGALRM, handler)
+            signal.setitimer(signal.ITIMER_REAL, seconds)
+            try:
+                return wrapped(*args, **kwargs)
+            finally:
+                signal.setitimer(signal.ITIMER_REAL, 0)
+                signal.signal(signal.SIGALRM, old)
 
-    return decorate
+    @wrapt.decorator
+    def wrapper_no_signals(wrapped, instance, args, kwargs):
+        if not seconds:
+            return wrapped(*args, **kwargs)
+        else:
+            timeout_wrapper = _Timeout(wrapped, timeout_exception, exception_message, seconds)
+            return timeout_wrapper(*args, **kwargs)
+
+    exc_msg=exception_message
+    if use_signals and not platform.system().lower().startswith('win') : # never use signals with windows - it wont work anyway
+        return wrapper_signals
+    else:
+        return wrapper_no_signals
 
 
 def _target(queue, function, *args, **kwargs):
     """Run a function with arguments and return output via a queue.
-
     This is a helper function for the Process created in _Timeout. It runs
     the function with positional arguments and keyword arguments and then
     returns the function's output by way of a queue. If an exception gets
@@ -111,7 +99,6 @@ def _target(queue, function, *args, **kwargs):
 class _Timeout(object):
 
     """Wrap a function and add a timeout (limit) attribute to it.
-
     Instances of this class are automatically generated by the add_timeout
     function defined above. Wrapping a function allows asynchronous calls
     to be made and termination of execution after a timeout has passed.
@@ -131,7 +118,6 @@ class _Timeout(object):
 
     def __call__(self, *args, **kwargs):
         """Execute the embedded function object asynchronously.
-
         The function given to the constructor is transparently called and
         requires that "ready" be intermittently polled. If and when it is
         True, the "value" property may then be checked for returned data.
