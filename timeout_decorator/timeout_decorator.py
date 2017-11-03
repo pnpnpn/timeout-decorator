@@ -56,7 +56,7 @@ def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError, exce
         global exc_msg
         new_seconds = kwargs.pop('dec_timeout', seconds)
         if not exc_msg:
-            exc_msg = 'Function {f} Timed out after {s} seconds'.format(f=wrapped.__name__,s=new_seconds)
+            exc_msg = 'Function {f} Timed out after {s} seconds'.format(f=wrapped.__name__, s=new_seconds)
         if not new_seconds:
             return wrapped(*args, **kwargs)
         else:
@@ -75,7 +75,7 @@ def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError, exce
         global exc_msg
         new_seconds = kwargs.pop('dec_timeout', seconds)
         if not exc_msg:
-            exc_msg = 'Function {f} Timed out after {s} seconds'.format(f=wrapped.__name__,s=new_seconds)
+            exc_msg = 'Function {f} Timed out after {s} seconds'.format(f=wrapped.__name__, s=new_seconds)
         if not new_seconds:
             return wrapped(*args, **kwargs)
         else:
@@ -83,8 +83,9 @@ def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError, exce
             return timeout_wrapper(*args, **kwargs)
 
     global exc_msg
-    exc_msg=exception_message
-    if use_signals and not platform.system().lower().startswith('win') : # never use signals with windows - it wont work anyway
+    exc_msg = exception_message
+    # never use signals with windows - it wont work anyway
+    if use_signals and not platform.system().lower().startswith('win') : 
         return wrapper_signals
     else:
         return wrapper_no_signals
