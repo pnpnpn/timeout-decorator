@@ -34,5 +34,5 @@ setup(
     author_email='pn.appdev@gmail.com',
     url='https://github.com/pnpnpn/timeout-decorator',
     packages=['timeout_decorator'],
-    install_requires=[],
+    install_requires=['wrapt'],
     classifiers=CLASSIFIERS)
