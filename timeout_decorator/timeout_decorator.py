@@ -68,10 +68,13 @@ def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError, exce
 
     @wrapt.decorator
     def wrapper_no_signals(wrapped, instance, args, kwargs):
+        global exc_msg
+        if not exc_msg:
+            exc_msg = '{f} timed out after {s} seconds'.format(f=wrapped.__name__,s=seconds)
         if not seconds:
             return wrapped(*args, **kwargs)
         else:
-            timeout_wrapper = _Timeout(wrapped, timeout_exception, exception_message, seconds)
+            timeout_wrapper = _Timeout(wrapped, timeout_exception, exc_msg, seconds)
             return timeout_wrapper(*args, **kwargs)
 
     exc_msg=exception_message
