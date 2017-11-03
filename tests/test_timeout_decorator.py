@@ -1,9 +1,8 @@
 """Timeout decorator tests."""
 import time
-
+import wrapt
 import pytest
 
-from timeout_decorator import timeout, TimeoutError
 
 
 @pytest.fixture(params=[False, True])
