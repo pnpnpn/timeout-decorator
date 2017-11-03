@@ -2,7 +2,7 @@
 import time
 import pytest
 
-from decorators_new import timeout
+from decorators import timeout
 
 @pytest.fixture(params=[False, True])
 def use_signals(request):
