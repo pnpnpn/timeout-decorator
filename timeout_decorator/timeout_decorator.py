@@ -25,10 +25,6 @@ import wrapt
 # in https://code.google.com/p/verse-quiz/source/browse/trunk/timeout.py
 
 
-if sys.version_info <= (3, 2):
-    TimeoutError = AssertionError
-
-
 def _raise_exception(exception, exception_message):
     """ This function checks if a exception message is given.
     If there is no exception message, the default behaviour is maintained.
@@ -40,7 +36,7 @@ def _raise_exception(exception, exception_message):
         raise exception(exception_message)
 
 
-def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError, exception_message=None):
+def timeout(seconds=None, use_signals=True, timeout_exception=None, exception_message=None):
     """Add a timeout parameter to a function and return it.
     :param seconds: optional time limit in seconds or fractions of a second. If None is passed, no timeout is applied.
         This adds some flexibility to the usage: you can disable timing out depending on the settings.
@@ -82,6 +78,12 @@ def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError, exce
         else:
             timeout_wrapper = _Timeout(wrapped, timeout_exception, exc_msg, new_seconds)
             return timeout_wrapper(*args, **kwargs)
+
+    if not timeout_exception:
+        if sys.version_info < (3, 3):
+            timeout_exception=AssertionError        # there is no TimeoutError below Python 3.3
+        else:
+            timeout_exception=TimeoutError
 
     global exc_msg
     exc_msg = exception_message
