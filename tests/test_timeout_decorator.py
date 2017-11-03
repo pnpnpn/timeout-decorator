@@ -5,7 +5,7 @@ import time
 from timeout_decorator import timeout
 
 
-if sys.version_info <= (3, 2):
+if sys.version_info < (3, 3):
     TimeoutError = AssertionError
 
 
