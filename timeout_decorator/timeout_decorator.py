@@ -52,7 +52,7 @@ def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError, exce
     def wrapper_signals(wrapped, instance, args, kwargs):
         global exc_msg
         if not exc_msg:
-            exc_msg = '{f} timed out after {s} seconds'.format(f=wrapped.__name__,s=seconds)
+            exc_msg = '{f} timed out after {s} seconds'.format(f=wrapped.__name__, s=seconds)
         if not seconds:
             return wrapped(*args, **kwargs)
         else:
@@ -78,7 +78,7 @@ def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError, exce
             return timeout_wrapper(*args, **kwargs)
 
     exc_msg=exception_message
-    if use_signals and not platform.system().lower().startswith('win') : # never use signals with windows - it wont work anyway
+    if use_signals and not platform.system().lower().startswith('win') :    # never use signals with windows - it wont work anyway
         return wrapper_signals
     else:
         return wrapper_no_signals
