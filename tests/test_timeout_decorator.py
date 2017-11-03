@@ -1,7 +1,7 @@
 """Timeout decorator tests."""
 import time
 import pytest
-from timeout_decorator import timeout
+from timeout_decorator timeout
 
 
 @pytest.fixture(params=[False, True])
@@ -32,16 +32,15 @@ def test_timeout_kwargs(use_signals):
     def f():
         time.sleep(2)
     with pytest.raises(TimeoutError):
-        # f(timeout=1)  - this keyword should NOT be allowed here ! what if the function uses a keyword argument 'timeout' !
-        f()
+        f(dec_timeout=1)
 
 def test_timeout_alternate_exception(use_signals):
     @timeout(1, use_signals=use_signals, timeout_exception=StopIteration)
     def f():
         time.sleep(2)
     with pytest.raises(StopIteration):
-        # f(timeout=1)  - this keyword should NOT be allowed here ! what if the function uses a keyword argument 'timeout' !
-        f()
+        f(dec_timeout=1)
+
 
 def test_timeout_no_seconds(use_signals):
     @timeout(use_signals=use_signals)
