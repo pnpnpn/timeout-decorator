@@ -9,6 +9,7 @@ Timeout decorator.
 
 import multiprocessing
 import multiprocessing.pool
+import os
 import platform
 import signal
 import sys
