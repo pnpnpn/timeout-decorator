@@ -1,5 +1,5 @@
 """Timeout decorator tests."""
-from timeout-decorator import timeout
+from timeout_decorator import timeout
 import pytest
 import sys
 import time
