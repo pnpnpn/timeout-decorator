@@ -33,7 +33,7 @@ def test_timeout_class_method(use_signals):
 
 
 def test_timeout_kwargs(use_signals):
-    @timeout(1, use_signals=use_signals)
+    @timeout(3, use_signals=use_signals)
     def f():
         time.sleep(2)
     with pytest.raises(TimeoutError):
@@ -41,7 +41,7 @@ def test_timeout_kwargs(use_signals):
 
 
 def test_timeout_alternate_exception(use_signals):
-    @timeout(1, use_signals=use_signals, timeout_exception=StopIteration)
+    @timeout(3, use_signals=use_signals, timeout_exception=StopIteration)
     def f():
         time.sleep(2)
     with pytest.raises(StopIteration):
