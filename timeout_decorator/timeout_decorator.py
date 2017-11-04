@@ -131,7 +131,6 @@ class _Timeout(object):
         requires that "ready" be intermittently polled. If and when it is
         True, the "value" property may then be checked for returned data.
         """
-        self.__limit = kwargs.pop('timeout', self.__limit)
         self.__queue = multiprocessing.Queue(1)
         args = (self.__queue, self.__function) + args
         self.__process = multiprocessing.Process(target=_target, args=args, kwargs=kwargs)
