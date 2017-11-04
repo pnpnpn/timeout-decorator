@@ -54,7 +54,7 @@ def timeout(timeout=None, use_signals=True, timeout_exception=None, exception_me
         exc_msg = exception_message
         new_timeout = kwargs.pop('dec_timeout', timeout)
         if not exc_msg:
-            exc_msg = 'Function {f} Timed out after {s} timeout'.format(f=wrapped.__name__, s=new_timeout)
+            exc_msg = 'Function {f} timed out after {s} seconds'.format(f=wrapped.__name__, s=new_timeout)
         if not new_timeout:
             return wrapped(*args, **kwargs)
         else:
