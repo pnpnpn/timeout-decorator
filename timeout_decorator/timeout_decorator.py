@@ -73,9 +73,9 @@ def timeout(timeout=None, use_signals=True, timeout_exception=None, exception_me
                 return timeout_wrapper(*args, **kwargs)
 
     # never use signals with windows - it wont work anyway
-    b_signals=False
+    b_signals = False
     if use_signals and not platform.system().lower().startswith('win'):
-        b_signals=True
+        b_signals = True
     return wrapper
 
 
