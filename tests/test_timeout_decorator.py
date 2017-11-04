@@ -1,12 +1,12 @@
 """Timeout decorator tests."""
-import time
+from decorators import timeout
 import pytest
 import sys
-from timeout_decorator import timeout
+import time
 
 
 if sys.version_info < (3, 3):            # there is no TimeoutError < Python 3.2
-    TimeoutError=AssertionError
+    TimeoutError = AssertionError
 
 
 @pytest.fixture(params=[False, True])
