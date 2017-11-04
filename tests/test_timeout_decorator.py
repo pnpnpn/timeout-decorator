@@ -1,12 +1,12 @@
 """Timeout decorator tests."""
+import time
 import pytest
 import sys
-import time
 from timeout_decorator import timeout
 
 
-if sys.version_info < (3, 3):
-    TimeoutError = AssertionError
+if sys.version_info < (3, 3):            # there is no TimeoutError < Python 3.2
+    TimeoutError=AssertionError
 
 
 @pytest.fixture(params=[False, True])
@@ -64,22 +64,23 @@ def test_timeout_partial_seconds(use_signals):
 
 
 def test_timeout_ok(use_signals):
-    @timeout(seconds=2, use_signals=use_signals)
+    @timeout(timeout=2, use_signals=use_signals)
     def f():
         time.sleep(1)
     f()
 
 
 def test_function_name(use_signals):
-    @timeout(seconds=2, use_signals=use_signals)
+    @timeout(timeout=2, use_signals=use_signals)
     def func_name():
         pass
+
     assert func_name.__name__ == 'func_name'
 
 
 def test_timeout_pickle_error():
     """Test that when a pickle error occurs a timeout error is raised."""
-    @timeout(seconds=1, use_signals=False)
+    @timeout(timeout=1, use_signals=False)
     def f():
         time.sleep(0.1)
 
@@ -91,7 +92,7 @@ def test_timeout_pickle_error():
 
 
 def test_timeout_custom_exception_message():
-    @timeout(seconds=1, exception_message="Custom fail message")
+    @timeout(timeout=1, exception_message="Custom fail message")
     def f():
         time.sleep(2)
     with pytest.raises(TimeoutError, match="Custom fail message"):
@@ -99,8 +100,8 @@ def test_timeout_custom_exception_message():
 
 
 def test_timeout_default_exception_message():
-    @timeout(seconds=1)
+    @timeout(timeout=1)
     def f():
         time.sleep(2)
-    with pytest.raises(TimeoutError, match="f Timed out after 1 seconds"):
+    with pytest.raises(TimeoutError, match="Function f Timed out after 1 timeout"):
         f()
