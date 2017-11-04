@@ -1,5 +1,5 @@
 """Timeout decorator tests."""
-from timeout_decorator import timeout
+from timeout_decorator import timeout # on github project
 import pytest
 import sys
 import time
@@ -103,5 +103,5 @@ def test_timeout_default_exception_message():
     @timeout(timeout=1)
     def f():
         time.sleep(2)
-    with pytest.raises(TimeoutError, match="Function f Timed out after 1 timeout"):
+    with pytest.raises(TimeoutError, match="Function f timed out after 1 seconds"):
         f()
