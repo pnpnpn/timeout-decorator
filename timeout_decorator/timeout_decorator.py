@@ -37,7 +37,7 @@ def _raise_exception(exception, exception_message):
     raise exception(exception_message)
 
 
-def timeout(timeout=None, use_signals=True, timeout_exception=None, exception_message=None):
+def timeout(timeout:float=None, use_signals:bool=True, timeout_exception:Exception=None, exception_message:str=None):
     """Add a timeout parameter to a function and return it.
     :param timeout: optional time limit in seconds or fractions of a second. If None is passed, no seconds is applied.
         This adds some flexibility to the usage: you can disable timing out depending on the settings.
