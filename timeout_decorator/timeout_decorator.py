@@ -40,7 +40,7 @@ def _raise_exception(exception, exception_message):
 def timeout(timeout=None, use_signals=True, timeout_exception=None, exception_message=None):
     """Add a timeout parameter to a function and return it.
 
-    Usage: 
+    Usage:
 
     @timeout(3)
     def foo():
@@ -49,7 +49,7 @@ def timeout(timeout=None, use_signals=True, timeout_exception=None, exception_me
     Usage without decorating a function :
 
     def foo2(a,b,c):
-        pass 
+        pass
 
     timeout(3)(foo)(1,2,c=3)
 
@@ -62,11 +62,11 @@ def timeout(timeout=None, use_signals=True, timeout_exception=None, exception_me
     :type use_signals:  bool
     :param timeout_exception: the Exception to be raised when timeout occurs, default = TimeoutException
     :type timeout_exception:  Exception
-    :param exception_message: the Message for the Exception. Default: 'Function {f} timed out after {s} seconds. 
+    :param exception_message: the Message for the Exception. Default: 'Function {f} timed out after {s} seconds.
     :type exception_message:  str
     :raises:            TimeoutError if time limit is reached
     :rtype:             Exception
-    
+
     :returns:           the Result of the wrapped function
 
     It is illegal to pass anything other than a function as the first parameter. 
