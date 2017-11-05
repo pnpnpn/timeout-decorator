@@ -21,7 +21,8 @@ import wrapt
 # http://www.saltycrane.com/blog/2010/04/using-python-timeout-decorator-uploading-s3/
 # Used work of Stephen "Zero" Chappell <Noctis.Skytower@gmail.com>
 # in https://code.google.com/p/verse-quiz/source/browse/trunk/timeout.py
-
+if sys.version_info < (3, 3):
+    TimeoutError = AssertionError  # there is no TimeoutError below Python 3.3
 
 def _raise_exception(exception, exception_message):
     """ This function checks if a exception message is given.
@@ -29,11 +30,7 @@ def _raise_exception(exception, exception_message):
     If there is an exception message, the message is passed to the exception.
     """
     if not exception:
-        if sys.version_info < (3, 3):
-            exception = AssertionError  # there is no TimeoutError below Python 3.3
-        else:
-            exception = TimeoutError
-
+        exception = TimeoutError
     raise exception(exception_message)
 
 
