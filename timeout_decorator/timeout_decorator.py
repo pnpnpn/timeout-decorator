@@ -2,7 +2,6 @@
 Timeout decorator.
     :copyright: (c) 2012-2013 by PN.
     :license: MIT, see LICENSE for more details.
-    Rotek modified version using wrapt
 """
 
 
@@ -20,7 +19,6 @@ import wrapt
 
 # http://www.saltycrane.com/blog/2010/04/using-python-timeout-decorator-uploading-s3/
 # Used work of Stephen "Zero" Chappell <Noctis.Skytower@gmail.com>
-# in https://code.google.com/p/verse-quiz/source/browse/trunk/timeout.py
 
 
 if sys.version_info < (3, 3):
@@ -53,7 +51,7 @@ def timeout(timeout=None, use_signals=True, timeout_exception=None, exception_me
 
     timeout(3)(foo)(1,2,c=3)
 
-    :param timeout:     optional time limit in seconds or fractions of a second. If None is passed, 
+    :param timeout:     optional time limit in seconds or fractions of a second. If None is passed,
                         no seconds is applied. This adds some flexibility to the usage: you can disable timing
                         out depending on the settings.
     :type timeout:      float
@@ -69,7 +67,7 @@ def timeout(timeout=None, use_signals=True, timeout_exception=None, exception_me
 
     :returns:           the Result of the wrapped function
 
-    It is illegal to pass anything other than a function as the first parameter. 
+    It is illegal to pass anything other than a function as the first parameter.
     The function is wrapped and returned to the caller.
     """
     @wrapt.decorator
