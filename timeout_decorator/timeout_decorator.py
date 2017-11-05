@@ -37,17 +37,40 @@ def _raise_exception(exception, exception_message):
     raise exception(exception_message)
 
 
-def timeout(timeout:float=None, use_signals:bool=True, timeout_exception:Exception=None, exception_message:str=None):
+def timeout(timeout=None, use_signals=True, timeout_exception=None, exception_message=None):
     """Add a timeout parameter to a function and return it.
-    :param timeout: optional time limit in seconds or fractions of a second. If None is passed, no seconds is applied.
-        This adds some flexibility to the usage: you can disable timing out depending on the settings.
-    :type timeout: float
+
+    Usage: 
+
+    @timeout(3)
+    def foo():
+        pass
+
+    Usage without decorating a function :
+
+    def foo2(a,b,c):
+        pass 
+
+    timeout(3)(foo)(1,2,c=3)
+
+    :param timeout:     optional time limit in seconds or fractions of a second. If None is passed, 
+                        no seconds is applied. This adds some flexibility to the usage: you can disable timing
+                        out depending on the settings.
+    :type timeout:      float
     :param use_signals: flag indicating whether signals should be used for timing function out or the multiprocessing
-        When using multiprocessing, seconds granularity is limited to 10ths of a second.
-    :type use_signals: bool
-    :raises: TimeoutError if time limit is reached
-    It is illegal to pass anything other than a function as the first
-    parameter. The function is wrapped and returned to the caller.
+                        When using multiprocessing, seconds granularity is limited to 10ths of a second.
+    :type use_signals:  bool
+    :param timeout_exception: the Exception to be raised when timeout occurs, default = TimeoutException
+    :type timeout_exception:  Exception
+    :param exception_message: the Message for the Exception. Default: 'Function {f} timed out after {s} seconds. 
+    :type exception_message:  str
+    :raises:            TimeoutError if time limit is reached
+    :rtype:             Exception
+    
+    :returns:           the Result of the wrapped function
+
+    It is illegal to pass anything other than a function as the first parameter. 
+    The function is wrapped and returned to the caller.
     """
     @wrapt.decorator
     def wrapper(wrapped, instance, args, kwargs):
