@@ -49,7 +49,7 @@ def timeout(timeout=None, use_signals=True, timeout_exception=None, exception_me
     def foo2(a,b,c):
         pass
 
-    timeout(3)(foo)(1,2,c=3)
+    timeout(3)(foo2)(1,2,c=3)
 
     :param timeout:     optional time limit in seconds or fractions of a second. If None is passed,
                         no seconds is applied. This adds some flexibility to the usage: you can disable timing
