@@ -35,14 +35,22 @@ def _raise_exception(exception, exception_message):
     raise exception(exception_message)
 
 
-def timeout(timeout=None, use_signals=True, timeout_exception=None, exception_message=None):
+def timeout(dec_timeout=None, use_signals=True, timeout_exception=None, exception_message=None, dec_allow_eval=False):
     """Add a timeout parameter to a function and return it.
+
+    ToDo : Traceback information when using no_signals
+           integrate tblib in order to get exceptions when use_signals=False
+           (see https://pypi.python.org/pypi/tblib)
 
     Usage:
 
     @timeout(3)
     def foo():
         pass
+
+    Overriding the timeout:
+
+    foo(dec_timeout=5)
 
     Usage without decorating a function :
 
@@ -51,46 +59,88 @@ def timeout(timeout=None, use_signals=True, timeout_exception=None, exception_me
 
     timeout(3)(foo2)(1,2,c=3)
 
-    :param timeout:     optional time limit in seconds or fractions of a second. If None is passed,
-                        no seconds is applied. This adds some flexibility to the usage: you can disable timing
-                        out depending on the settings.
-    :type timeout:      float
-    :param use_signals: flag indicating whether signals should be used for timing function out or the multiprocessing
-                        When using multiprocessing, seconds granularity is limited to 10ths of a second.
-    :type use_signals:  bool
-    :param timeout_exception: the Exception to be raised when timeout occurs, default = TimeoutException
-    :type timeout_exception:  Exception
-    :param exception_message: the Message for the Exception. Default: 'Function {f} timed out after {s} seconds.
-    :type exception_message:  str
-    :raises:            TimeoutError if time limit is reached
-    :rtype:             Exception
+    Usage with eval (beware, security hazard, no user input values here):
+        read : https://nedbatchelder.com/blog/201206/eval_really_is_dangerous.html before usage !
 
-    :returns:           the Result of the wrapped function
+    def class Foo(object):
+        def __init__(self,x):
+            self.x=x
+
+        @timeout('instance.x', dec_allow_eval=True)
+        def foo2(self):
+            print('swallow')
+
+        @timeout(1)
+        def foo3(self):
+            print('parrot')
+
+    # or override via kwarg :
+    my_foo = Foo(3)
+    my_foo.foo2(dec_timeout='instance.x * 2.5 +1')
+    my_foo.foo3(dec_timeout='instance.x * 2.5 +1', dec_allow_eval=True)
+
+
+    :param dec_timeout: *       optional time limit in seconds or fractions of a second. If None is passed,
+                                no seconds is applied. This adds some flexibility to the usage: you can disable timing
+                                out depending on the settings. dec_timeout will always be overridden by a
+                                kwarg passed to the wrapped function, class or class method.
+    :param use_signals:         flag indicating whether signals should be used or the multiprocessing
+                                when using multiprocessing, timeout granularity is limited to 10ths of a second.
+    :param timeout_exception:   the Exception to be raised when timeout occurs, default = TimeoutException
+    :param exception_message:   the Message for the Exception. Default: 'Function {f} timed out after {s} seconds.
+    :param dec_allow_eval: *    allows a string in parameter dec_timeout what will be evaluated. Beware this can
+                                be a security issue. This is very powerful, but is also very dangerous if you 
+                                accept strings to evaluate from untrusted input.
+                                read: https://nedbatchelder.com/blog/201206/eval_really_is_dangerous.html
+
+                                If enabled, the parameter of the function dec_timeout, or the parameter passed
+                                by kwarg dec_timeout will be evaluated if its type is string. You can access :
+                                wrapped (the function object)
+                                instance    Example: 'instance.x' - see example above or doku
+                                args        Example: 'args[0]' - the timeout is the first argument in args
+                                kwargs      Example: 'kwargs["max_time"] * 2'
+
+    * all parameters starting with dec_ can be overridden via kwargs passed to the wrapped function.
+
+    :type dec_timeout:          float
+    :type use_signals:          bool
+    :type timeout_exception:    Exception
+    :type exception_message:    str
+
+
+    :raises:                    TimeoutError if time limit is reached
+
+    :returns:                   the Result of the wrapped function
 
     It is illegal to pass anything other than a function as the first parameter.
     The function is wrapped and returned to the caller.
+
     """
+
     @wrapt.decorator
     def wrapper(wrapped, instance, args, kwargs):
-        exc_msg = exception_message
-        new_timeout = kwargs.pop('dec_timeout', timeout)
+        exc_msg = exception_message                             # make mutable
+        decm_allow_eval = kwargs.pop('dec_allow_eval', dec_allow_eval)  # make mutable and get possibly kwarg
+        decm_timeout = kwargs.pop('dec_timeout', dec_timeout)   # make mutable and get possibly kwarg
+        if decm_allow_eval and isinstance(dec_timeout,str):
+            decm_timeout = eval(decm_timeout)                   # if allowed evaluate timeout
         if not exc_msg:
-            exc_msg = 'Function {f} timed out after {s} seconds'.format(f=wrapped.__name__, s=new_timeout)
-        if not new_timeout:
+            exc_msg = 'Function {f} timed out after {s} seconds'.format(f=wrapped.__name__, s=decm_timeout)
+        if not decm_timeout:
             return wrapped(*args, **kwargs)
         else:
             if b_signals:
                 def handler(signum, frame):
                     _raise_exception(timeout_exception, exc_msg)
                 old = signal.signal(signal.SIGALRM, handler)
-                signal.setitimer(signal.ITIMER_REAL, new_timeout)
+                signal.setitimer(signal.ITIMER_REAL, decm_timeout)
                 try:
                     return wrapped(*args, **kwargs)
                 finally:
                     signal.setitimer(signal.ITIMER_REAL, 0)
                     signal.signal(signal.SIGALRM, old)
             else:
-                timeout_wrapper = _Timeout(wrapped, timeout_exception, exc_msg, new_timeout)
+                timeout_wrapper = _Timeout(wrapped, timeout_exception, exc_msg, decm_timeout)
                 return timeout_wrapper(*args, **kwargs)
 
     # never use signals with windows - it wont work anyway
