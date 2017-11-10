@@ -60,6 +60,18 @@ def test_timeout_partial_seconds(use_signals):
         f()
 
 
+def test_timeout_class_attribute(use_signals):
+    class T():
+        def __init__(self, timeout):
+            self.timeout = timeout
+            
+        @timeout_decorator.timeout(use_class_attribute=True)
+        def f(self):
+            time.sleep(0.5)
+    with pytest.raises(TimeoutError):
+        T(0.2).f()
+        
+        
 def test_timeout_ok(use_signals):
     @timeout(seconds=2, use_signals=use_signals)
     def f():
