@@ -89,7 +89,7 @@ def timeout(dec_timeout=None, use_signals=True, timeout_exception=None, exceptio
     :param timeout_exception:   the Exception to be raised when timeout occurs, default = TimeoutException
     :param exception_message:   the Message for the Exception. Default: 'Function {f} timed out after {s} seconds.
     :param dec_allow_eval: *    allows a string in parameter dec_timeout what will be evaluated. Beware this can
-                                be a security issue. This is very powerful, but is also very dangerous if you 
+                                be a security issue. This is very powerful, but is also very dangerous if you
                                 accept strings to evaluate from untrusted input.
                                 read: https://nedbatchelder.com/blog/201206/eval_really_is_dangerous.html
 
@@ -122,7 +122,7 @@ def timeout(dec_timeout=None, use_signals=True, timeout_exception=None, exceptio
         exc_msg = exception_message                             # make mutable
         decm_allow_eval = kwargs.pop('dec_allow_eval', dec_allow_eval)  # make mutable and get possibly kwarg
         decm_timeout = kwargs.pop('dec_timeout', dec_timeout)   # make mutable and get possibly kwarg
-        if decm_allow_eval and isinstance(dec_timeout,str):
+        if decm_allow_eval and isinstance(dec_timeout, str):
             decm_timeout = eval(decm_timeout)                   # if allowed evaluate timeout
         if not exc_msg:
             exc_msg = 'Function {f} timed out after {s} seconds'.format(f=wrapped.__name__, s=decm_timeout)
