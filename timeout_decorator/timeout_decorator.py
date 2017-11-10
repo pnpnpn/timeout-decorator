@@ -47,7 +47,8 @@ def _raise_exception(exception, exception_message):
         raise exception(value=exception_message)
 
 
-def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError, exception_message=None, use_class_attribute=False):
+def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError,
+            exception_message=None, use_class_attribute=False):
     """Add a timeout parameter to a function and return it.
 
     :param seconds: optional time limit in seconds or fractions of a second. If None is passed, no timeout is applied.
@@ -56,10 +57,10 @@ def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError, exce
     :param use_signals: flag indicating whether signals should be used for timing function out or the multiprocessing
         When using multiprocessing, timeout granularity is limited to 10ths of a second.
     :type use_signals: bool
-    :param use_class_attribute: flag indicating wether the decorator should use the 'self.timeout' attribute of a class as the time limit.
+    :param use_class_attribute: flag indicating whether the decorator should use 'timeout' attribute of a class as limit
         If this flag is set, 'seconds' value will be ignored if set.
     :type use_class_attribute: bool
-    
+
     :raises: TimeoutError if time limit is reached
 
     It is illegal to pass anything other than a function as the first
@@ -73,11 +74,10 @@ def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError, exce
         if use_signals:
             def handler(signum, frame):
                 _raise_exception(timeout_exception, exception_message)
-            
+
             if use_class_attribute:
                 @wraps(function)
                 def new_function(self, *args, **kwargs):
-                    
                     new_seconds = kwargs.pop('timeout', self.timeout)
                     if new_seconds:
                         old = signal.signal(signal.SIGALRM, handler)
@@ -89,11 +89,10 @@ def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError, exce
                             signal.setitimer(signal.ITIMER_REAL, 0)
                             signal.signal(signal.SIGALRM, old)
                 return new_function
-            
+
             else:
                 @wraps(function)
                 def new_function(*args, **kwargs):
-                    
                     new_seconds = kwargs.pop('timeout', seconds)
                     if new_seconds:
                         old = signal.signal(signal.SIGALRM, handler)
@@ -112,7 +111,7 @@ def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError, exce
                     timeout_wrapper = _Timeout(function, timeout_exception, exception_message, self.timeout)
                     return timeout_wrapper(self, *args, **kwargs)
                 return new_function
-            
+
             else:
                 @wraps(function)
                 def new_function(*args, **kwargs):
