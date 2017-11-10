@@ -53,6 +53,30 @@ Specify an alternate exception to raise on timeout:
     if __name__ == '__main__':
         mytest()
 
+
+If used on a method, can use the *timeout* field of the class:
+
+::
+
+    import time
+    import timeout_decorator
+    
+    class Test():
+        def __init__(self, timeout):
+            self.timeout = timeout
+            
+        @timeout_decorator.timeout(use_class_attribute=True)
+        def mytest(self):
+            print("Start")
+            for i in range(1,10):
+                time.sleep(1)
+                print("{} seconds have passed".format(i))
+
+    if __name__ == '__main__':
+        Test(5).mytest()
+
+
+
 Multithreading
 --------------
 
