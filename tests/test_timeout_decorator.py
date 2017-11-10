@@ -5,7 +5,7 @@ import sys
 import time
 
 
-if sys.version_info < (3, 3):            # there is no TimeoutError < Python 3.2
+if sys.version_info < (3, 3):             # there is no TimeoutError < Python 3.3
     TimeoutError = AssertionError
 
 
@@ -64,14 +64,14 @@ def test_timeout_partial_seconds(use_signals):
 
 
 def test_timeout_ok(use_signals):
-    @timeout(timeout=2, use_signals=use_signals)
+    @timeout(dec_timeout=2, use_signals=use_signals)
     def f():
         time.sleep(1)
     f()
 
 
 def test_function_name(use_signals):
-    @timeout(timeout=2, use_signals=use_signals)
+    @timeout(dec_timeout=2, use_signals=use_signals)
     def func_name():
         pass
 
@@ -80,7 +80,7 @@ def test_function_name(use_signals):
 
 def test_timeout_pickle_error():
     """Test that when a pickle error occurs a timeout error is raised."""
-    @timeout(timeout=1, use_signals=False)
+    @timeout(dec_timeout=1, use_signals=False)
     def f():
         time.sleep(0.1)
 
@@ -92,7 +92,7 @@ def test_timeout_pickle_error():
 
 
 def test_timeout_custom_exception_message():
-    @timeout(timeout=1, exception_message="Custom fail message")
+    @timeout(dec_timeout=1, exception_message="Custom fail message")
     def f():
         time.sleep(2)
     with pytest.raises(TimeoutError, match="Custom fail message"):
@@ -100,7 +100,7 @@ def test_timeout_custom_exception_message():
 
 
 def test_timeout_default_exception_message():
-    @timeout(timeout=1)
+    @timeout(dec_timeout=1)
     def f():
         time.sleep(2)
     with pytest.raises(TimeoutError, match="Function f timed out after 1 seconds"):
