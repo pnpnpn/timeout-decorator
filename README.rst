@@ -54,7 +54,7 @@ Specify an alternate exception to raise on timeout:
         mytest()
 
 
-If used on a method, can use the *timeout* field of the class:
+If used on a non-static method of a class, can use the *timeout* field of the class:
 
 ::
 
