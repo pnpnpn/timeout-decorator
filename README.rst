@@ -16,7 +16,7 @@ From pypi:
 
 ::
 
-    pip install timeout-decorator
+    pip install -e git://github.com/qcoumes/timeout-decorator.git#egg=timeout-decorator
 
 Usage
 -----
