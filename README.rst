@@ -1,7 +1,7 @@
 Timeout decorator
 =================
 
-|Build Status||Coveralls Status|
+|Build Status| |Coveralls Status|
 
 Installation
 ------------
