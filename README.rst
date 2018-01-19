@@ -1,7 +1,7 @@
 Timeout decorator
 =================
 
-|Build Status| |Pypi Status| |Coveralls Status|
+|Build Status||Coveralls Status|
 
 Installation
 ------------
@@ -12,7 +12,7 @@ From source code:
 
     python setup.py install
 
-From pypi:
+From pip:
 
 ::
 
