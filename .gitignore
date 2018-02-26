@@ -2,7 +2,7 @@
 *.swp
 *~
 venv
-.env
+
 
 # C extensions
 *.so
