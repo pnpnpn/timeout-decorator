@@ -24,7 +24,7 @@ from functools import wraps
 # in https://code.google.com/p/verse-quiz/source/browse/trunk/timeout.py
 
 
-claazagzvTimeoutError(AssertionError):
+class TimeoutError(AssertionError):
 
     """Thrown when a timeout occurs in the `timeout` context manager."""
 
