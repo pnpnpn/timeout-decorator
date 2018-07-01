@@ -16,6 +16,11 @@ install:
 - if [[ $TRAVIS_PYTHON_VERSION == 3.3 ]]; then pip install virtualenv==15.2.0; fi
 - pip install -U pip wheel setuptools
 - pip install tox tox-travis
-- pip install coverage==4.0.3 py pytest pytest-cov python-coveralls
+- if [[ $TRAVIS_PYTHON_VERSION == 3.2 ]]; then
+      coverage==3.7.1;
+    else
+      coverage;
+  fi
+- pip install py pytest pytest-cov python-coveralls
 
 script: tox
