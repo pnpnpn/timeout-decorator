@@ -35,4 +35,5 @@ setup(
     url='https://github.com/pnpnpn/timeout-decorator',
     packages=['timeout_decorator'],
     install_requires=[],
-    classifiers=CLASSIFIERS)
+    classifiers=CLASSIFIERS
+)
