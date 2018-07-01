@@ -1,5 +1,7 @@
 language: python
+
 sudo: false
+
 python:
 - '2.6'
 - '2.7'
@@ -14,13 +16,9 @@ python:
 install:
 - if [[ $TRAVIS_PYTHON_VERSION == 3.2 ]]; then pip install -U "virtualenv<14.0.0"; fi
 - if [[ $TRAVIS_PYTHON_VERSION == 3.3 ]]; then pip install virtualenv==15.2.0; fi
+- if [[ $TRAVIS_PYTHON_VERSION == 3.2 ]]; then pip install coverage==3.7.1; else pip install coverage; fi
 - pip install -U pip wheel setuptools
 - pip install tox tox-travis
-- if [[ $TRAVIS_PYTHON_VERSION == 3.2 ]]; then
-      pip install coverage==3.7.1;
-    else
-      pip install coverage;
-  fi
 - pip install py pytest pytest-cov python-coveralls
 
 script: tox
