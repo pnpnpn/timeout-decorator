@@ -17,9 +17,9 @@ install:
 - pip install -U pip wheel setuptools
 - pip install tox tox-travis
 - if [[ $TRAVIS_PYTHON_VERSION == 3.2 ]]; then
-      coverage==3.7.1;
+      pip install coverage==3.7.1;
     else
-      coverage;
+      pip install coverage;
   fi
 - pip install py pytest pytest-cov python-coveralls
 
