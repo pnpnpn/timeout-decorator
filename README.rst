@@ -2,7 +2,7 @@
     :target: https://travis-ci.org/qcoumes/timeout-decorator
 .. image:: https://coveralls.io/repos/github/qcoumes/timeout-decorator/badge.svg?branch=master&service=github
     :target: https://coveralls.io/github/qcoumes/timeout-decorator?branch=master
-.. image:: https://img.shields.io/badge/python-2.6%2C%202.7%2C%203.2+-brightgreen.svg
+.. image:: https://img.shields.io/badge/python-2.7%2C%203.4+-brightgreen.svg
     :target: #
 .. image:: https://img.shields.io/badge/license-MIT-brightgreen.svg
     :target: https://github.com/qcoumes/timeout-decorator/blob/master/LICENSE
