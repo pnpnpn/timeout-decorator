@@ -142,7 +142,6 @@ class _Timeout(object):
         self.__process = multiprocessing.Process(target=_target,
                                                  args=args,
                                                  kwargs=kwargs)
-        self.__process.daemon = True
         self.__process.start()
         self.__timeout = self.__limit + time.time()
         while not self.ready:
