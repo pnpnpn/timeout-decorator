@@ -172,7 +172,7 @@ class _Timeout(object):
                                                  kwargs=kwargs)
         self.__process.daemon = True
         self.__process.start()
-        self.__timeout = self.__limit + time.time()
+        self.__timeout = float(self.__limit) + time.time()
         while not self.ready:
             time.sleep(0.01)
         return self.value
