@@ -205,7 +205,6 @@ class _Timeout(object):
         """Terminate any possible execution of the embedded function."""
         if self.__process.is_alive():
             self.__process.terminate()
-
         _raise_exception(self.__timeout_exception, self.__exception_message)
 
     @property
@@ -220,6 +219,8 @@ class _Timeout(object):
         """Read-only property containing data returned from function."""
         if self.ready is True:
             flag, load = self.__queue.get()
+            self.__process.join(1)   # when self.__queue.get() exits, maybe __process is still alive, 
+                                     # then it might zombie the process. so lets join it explicitly
             if flag:
                 return load
             raise load
