@@ -32,7 +32,7 @@ setup(
     long_description=long_description,
     author='Patrick Ng',
     author_email='pn.appdev@gmail.com',
-    url='https://github.com/pnpnpn/timeout-decorator',
+    url='https://github.com/bitranox/timeout-decorator',
     packages=['timeout_decorator'],
-    install_requires=[],
+    install_requires=['dill', 'multiprocess', 'wrapt'],
     classifiers=CLASSIFIERS)
