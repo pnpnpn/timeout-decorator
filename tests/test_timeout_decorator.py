@@ -1,8 +1,9 @@
 """Timeout decorator tests."""
-from timeout_decorator import timeout
+from wrapt_timeout_decorator import timeout
 import pytest
 import sys
 import time
+from dill import PicklingError
 
 
 if sys.version_info < (3, 3):             # there is no TimeoutError < Python 3.3
@@ -23,12 +24,21 @@ def test_timeout_decorator_arg(use_signals):
         f()
 
 
-def test_timeout_class_method(use_signals):
+def test_timeout_class_method_use_signals():
     class c():
-        @timeout(1, use_signals=use_signals)
+        @timeout(1, use_signals=True)
         def f(self):
             time.sleep(2)
     with pytest.raises(TimeoutError):
+        c().f()
+
+
+def test_timeout_class_method_dont_use_signals():
+    class c():
+        @timeout(1, use_signals=False)
+        def f(self):
+            time.sleep(2)
+    with pytest.raises(PicklingError):
         c().f()
 
 
@@ -75,11 +85,13 @@ def test_function_name(use_signals):
     def func_name():
         pass
 
+    func_name()
     assert func_name.__name__ == 'func_name'
 
 
 def test_timeout_pickle_error():
-    """Test that when a pickle error occurs a timeout error is raised."""
+    """Test that when a pickle error occurs a timeout error is raised"""
+    # codecov start ignore
     @timeout(dec_timeout=1, use_signals=False)
     def f():
         time.sleep(0.1)
@@ -87,7 +99,8 @@ def test_timeout_pickle_error():
         class Test(object):
             pass
         return Test()
-    with pytest.raises(TimeoutError):
+    # codecov end ignore
+    with pytest.raises(PicklingError):
         f()
 
 
@@ -104,4 +117,24 @@ def test_timeout_default_exception_message():
     def f():
         time.sleep(2)
     with pytest.raises(TimeoutError, match="Function f timed out after 1 seconds"):
+        f()
+
+
+def test_timeout_eval(use_signals):
+    """ Test Eval """
+    @timeout(dec_timeout='args[0] * 2', use_signals=use_signals, dec_allow_eval=True)
+    def f(x):
+        time.sleep(0.4)
+    f(0.3)
+    with pytest.raises(TimeoutError):
+        f(0.1)
+
+
+def test_exception(use_signals):
+    """ Test Exception """
+    @timeout(0.4, use_signals=use_signals)
+    def f():
+        raise AssertionError
+
+    with pytest.raises(AssertionError):
         f()
