@@ -168,6 +168,8 @@ class _Timeout(object):
         """Read-only property containing data returned from function."""
         if self.ready is True:
             flag, load = self.__queue.get()
+            while self.__process.is_alive():
+                time.sleep(0.01)
             if flag:
                 return load
             raise load
