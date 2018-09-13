@@ -1,7 +1,7 @@
 Timeout decorator
 =================
 
-|Build Status| |Pypi Status| |Coveralls Status|
+|Build Status| |Pypi Status| |Codecov Status|
 
 Installation
 ------------
@@ -107,5 +107,5 @@ See `License file <https://github.com/pnpnpn/timeout-decorator/blob/master/LICEN
    :target: https://travis-ci.org/pnpnpn/timeout-decorator
 .. |Pypi Status| image:: https://badge.fury.io/py/timeout-decorator.svg
     :target: https://badge.fury.io/py/timeout-decorator
-.. |Coveralls Status| image:: https://coveralls.io/repos/pnpnpn/timeout-decorator/badge.png?branch=master
-    :target: https://coveralls.io/r/pnpnpn/timeout-decorator
+.. |Codecov Status| image:: https://codecov.io/gh/bitranox/wrapt-timeout-decorator/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/bitranox/wrapt-timeout-decorator
