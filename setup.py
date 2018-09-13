@@ -34,5 +34,5 @@ setup(
     author_email='pn.appdev@gmail.com',
     url='https://github.com/bitranox/timeout-decorator',
     packages=['timeout_decorator'],
-    install_requires=['wrapt'],
+    install_requires=['dill', 'multiprocess', 'wrapt'],
     classifiers=CLASSIFIERS)
