@@ -1,3 +1,5 @@
+dist: xenial
+
 language: python
 
 sudo: false
@@ -8,6 +10,7 @@ python:
     - '3.4'
     - '3.5'
     - '3.6'
+    - '3.7'
 
 install:
     - pip install -U wheel setuptools
