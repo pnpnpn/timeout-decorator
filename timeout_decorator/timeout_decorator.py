@@ -44,7 +44,7 @@ def _raise_exception(exception, exception_message):
     if exception_message is None:
         raise exception()
     else:
-        raise exception(value=exception_message)
+        raise exception(exception_message)
 
 
 def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError, exception_message=None):

@@ -96,6 +96,14 @@ def test_timeout_custom_exception_message():
         f()
 
 
+def test_timeout_custom_exception_with_message():
+    @timeout(seconds=1, timeout_exception=RuntimeError, exception_message="Custom fail message")
+    def f():
+        time.sleep(2)
+    with pytest.raises(RuntimeError, match="Custom fail message"):
+        f()
+
+
 def test_timeout_default_exception_message():
     @timeout(seconds=1)
     def f():
