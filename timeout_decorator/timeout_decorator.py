@@ -11,7 +11,7 @@ from __future__ import division
 
 import sys
 import time
-import multiprocessing
+import billiard as multiprocessing
 import signal
 from functools import wraps
 
