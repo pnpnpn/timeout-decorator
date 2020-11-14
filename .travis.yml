@@ -7,7 +7,7 @@ python:
 - '3.8'
 install:
 - pip install python-coveralls tox tox-travis
-script: tox --recreate
+script: tox
 after_success:
 - pip install -e .
 - py.test --cov=timeout_decorator --cov-report=term-missing tests
