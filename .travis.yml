@@ -6,7 +6,7 @@ python:
 - '3.7'
 - '3.8'
 install:
-- pip install six python-coveralls tox tox-travis
+- pip install six==1.15.0 python-coveralls tox tox-travis
 script: tox --recreate
 after_success:
 - pip install -e .
