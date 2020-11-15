@@ -6,8 +6,9 @@ python:
 - '3.7'
 - '3.8'
 install:
+- pip install --upgrade virtualenv
 - pip install python-coveralls tox tox-travis
-script: tox
+script: tox --recreate
 after_success:
 - pip install -e .
 - py.test --cov=timeout_decorator --cov-report=term-missing tests
