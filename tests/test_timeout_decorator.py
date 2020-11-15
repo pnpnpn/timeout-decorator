@@ -45,6 +45,14 @@ def test_timeout_alternate_exception(use_signals):
         f(timeout=1)
 
 
+def test_timeout_kwargs_with_initial_timeout_none(use_signals):
+    @timeout(use_signals=use_signals)
+    def f():
+        time.sleep(2)
+    with pytest.raises(TimeoutError):
+        f(timeout=1)
+
+
 def test_timeout_no_seconds(use_signals):
     @timeout(use_signals=use_signals)
     def f():
