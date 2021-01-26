@@ -149,12 +149,16 @@ class _Timeout(object):
             self.__timeout = self.__limit + time.time()
         while not self.ready:
             time.sleep(0.01)
-        return self.value
+        result = self.value
+        self.__process.terminate()
+        self.__process.join()
+        return result
 
     def cancel(self):
         """Terminate any possible execution of the embedded function."""
         if self.__process.is_alive():
             self.__process.terminate()
+            self.__process.join()
 
         _raise_exception(self.__timeout_exception, self.__exception_message)
 
