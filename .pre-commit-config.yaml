@@ -77,11 +77,13 @@ repos:
   rev: 1.7.4
   hooks:
   - id: bandit
+    exclude: ^tests/
     name: Security linting (bandit)
 - repo: https://github.com/pycqa/pylint
   rev: v2.12.2
   hooks:
   - id: pylint
     name: Linting Python code (pylint)
+    exclude: ^tests/
     args:
     - --fail-under=9
