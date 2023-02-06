@@ -24,4 +24,4 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint --exit-zero --output-format=text $(find -type f -name "*.py" ! -path "**/venv/**" ! -path "**/tests/**")
+        pylint --fail-under=9 --output-format=text $(find -type f -name "*.py" ! -path "**/venv/**" ! -path "**/tests/**")

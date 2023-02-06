@@ -1,3 +1,4 @@
+"""Setup script for timeoutd."""
 import setuptools
 
 if __name__ == "__main__":
