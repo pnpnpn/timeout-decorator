@@ -1,1 +1,12 @@
-include *.rst
+# The MANIFEST.in file controls the stuff, that goes into the source distribution.
+# Most files needed are automatically included.
+# You can find further information at:
+# <https://packaging.python.org/en/latest/guides/using-manifest-in/>
+# However, we out-sourced some files which are thus not automatically included.
+# These have to be added manually.
+
+# Include the license file
+include LICENSE
+
+# Include the version file
+include VERSION
