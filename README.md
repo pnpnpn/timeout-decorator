@@ -9,7 +9,6 @@ Status](https://coveralls.io/repos/pnpnpn/timeout-decorator/badge.png?branch=mas
 
 ## Installation
 
-
 From source code:
 
 ```shell
