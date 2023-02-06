@@ -44,7 +44,7 @@ Specify an alternate exception to raise on timeout:
     import time
     import timeoutd
 
-    @timeoutd.timeout(5, timeout_exception=StopIteration)
+    @timeoutd.timeout(5, exception_type=StopIteration)
     def mytest():
         print("Start")
         for i in range(1,10):
