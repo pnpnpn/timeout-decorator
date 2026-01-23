@@ -140,9 +140,10 @@ class _Timeout(object):
         self.__limit = kwargs.pop('timeout', self.__limit)
         self.__queue = multiprocessing.Queue(1)
         args = (self.__queue, self.__function) + args
-        self.__process = multiprocessing.Process(target=_target,
-                                                 args=args,
-                                                 kwargs=kwargs)
+        ctx = multiprocessing.get_context('fork')
+        self.__process = ctx.Process(target=_target,
+                                     args=args,
+                                     kwargs=kwargs)
         self.__process.daemon = True
         self.__process.start()
         if self.__limit is not None:
