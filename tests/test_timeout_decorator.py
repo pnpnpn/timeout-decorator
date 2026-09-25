@@ -53,6 +53,21 @@ def test_timeout_kwargs_with_initial_timeout_none(use_signals):
         f(timeout=1)
 
 
+def test_kwargs_timeout_disarmed_after_early_return():
+    """A per-call timeout given to a decorator with no default `seconds`
+    must be cancelled once the call returns, even though it finished well
+    inside the requested timeout. Otherwise the alarm keeps ticking and
+    fires later, in code that has nothing to do with the original call."""
+    @timeout(use_signals=True)
+    def f():
+        time.sleep(0.05)
+
+    f(timeout=1)
+    # If the alarm armed for the call above was never cancelled, it is
+    # still pending here and will raise well after f() already returned.
+    time.sleep(1.2)
+
+
 def test_timeout_no_seconds(use_signals):
     @timeout(use_signals=use_signals)
     def f():
