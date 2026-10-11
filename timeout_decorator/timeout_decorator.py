@@ -75,9 +75,6 @@ def timeout(seconds=None, use_signals=True, timeout_exception=TimeoutError, exce
                     old = signal.signal(signal.SIGALRM, handler)
                     signal.setitimer(signal.ITIMER_REAL, new_seconds)
 
-                if not seconds:
-                    return function(*args, **kwargs)
-
                 try:
                     return function(*args, **kwargs)
                 finally:
