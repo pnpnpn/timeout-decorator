@@ -1,5 +1,6 @@
 """Timeout decorator tests."""
 import time
+import signal
 
 import pytest
 
@@ -118,3 +119,26 @@ def test_timeout_default_exception_message():
         time.sleep(2)
     with pytest.raises(TimeoutError, match="Timed Out"):
         f()
+
+
+@pytest.mark.parametrize('raises', [False, True])
+def test_signal_cleanup_with_initial_timeout_none(raises):
+    previous_handler = signal.getsignal(signal.SIGALRM)
+
+    @timeout()
+    def f():
+        if raises:
+            raise ValueError('test error')
+        return 42
+
+    try:
+        if raises:
+            with pytest.raises(ValueError, match='test error'):
+                f(timeout=1)
+        else:
+            assert f(timeout=1) == 42
+        assert signal.getsignal(signal.SIGALRM) is previous_handler
+        assert signal.getitimer(signal.ITIMER_REAL) == (0.0, 0.0)
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, 0)
+        signal.signal(signal.SIGALRM, previous_handler)
